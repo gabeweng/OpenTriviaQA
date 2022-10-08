@@ -1,19 +1,15 @@
 import os
 import pandas as pd
 import numpy as np
-def txt_to_csv(path): 
-  """
-  The csv Generarted will be such:
-    |Questions | Correct | A | B | C | D |
-  0 |  myQ     |    X    | a | X | c | d |  
-  """   
+def txt_to_csv(path,file): 
+ 
   questions=[]
   key=[]
   dist1=[]
   dist2=[]
   dist3=[]
   dist4=[]
-  with open(path, errors='ignore',mode="r") as file1:
+  with open(path+file, errors='ignore',mode="r") as file1:
       files = file1.readlines()
       i=0
       for i in range(len(files)):
@@ -21,7 +17,7 @@ def txt_to_csv(path):
           try:
             if files[i+1][3]=='#':
               continue          
-            questions.append(files[i+1][3:len(files)-1])
+            questions.append((files[i+1][3:len(files)-1]).strip())
             key.append(files[i+2][2:len(files[i+2])-1])
             if (files[i+3]!="\n"):
               dist1.append(files[i+3][2:len(files[i+3])-1])
@@ -51,6 +47,7 @@ def txt_to_csv(path):
           except:
             pass
   bank={}
+  bank["Category"]=file
   bank["Questions"]=questions
   bank["Correct"]=key
   bank["A"]=dist1
@@ -60,17 +57,15 @@ def txt_to_csv(path):
   df=pd.DataFrame(bank)
   return df
 
-def parse_files(sourcePath='/content/drive/MyDrive/Colab Notebooks/Data_trivial/',destination='/content/drive/MyDrive/Colab Notebooks/Data_trivial_csv/'):
-  """
-  Input SourcePath and Destination Path to trverse through the files and convert them into csv
-  Requirement Python 3.x , Numpy , os , Pandas
-  or run this in Google Colab as it is
-  """
-  filenames=sourcePath
-  for files in os.listdir(filenames):
-     path=filenames+files
-     data=txt_to_csv(path)
-     data.to_csv(destination+files+'.csv')
+def parse_files(sourcePath='categories/',destination='/'):
 
-print(' Input SourcePath and Destination Path to trverse through the files and convert them into csv \n  Requirement Python 3.x , Numpy , os , Pandas \n  or run this in Google Colab as it is')
-parse_files(sourcePath=input('SourcePath'),destination=input('Destination Path'))
+  li = []
+  for file in os.listdir(sourcePath):
+    print("Parsing file: ",file)
+    data=txt_to_csv(sourcePath,file)
+    li.append(data)
+  return pd.concat(li, axis=0, ignore_index=True)
+
+data = parse_files()
+data.to_csv("trivia.csv",index=False)
+print("Done!")
