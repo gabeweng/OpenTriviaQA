@@ -29,9 +29,14 @@ Possible contributions can be adding more questions/answers, doing finer categor
 change the files to a better format that is also human friendly.
 
 ## Changes to text2csv.py
+
 To make the csv files generated more useful for our purposes, we made some changes to the text2csv.py file.
 
 We put the final output into one csv that can be read by pandas and added a category column to keep track of which category each one question came from.
+
+## Making Data Avaliable
+
+We copied the trivia.csv file to a public GitHub repository called opendata and pushed a commit. Now that the csv file is on Github, we can use the raw data link
 
 ## License
 
